@@ -51,17 +51,18 @@ namespace MiniBackend.Controllers
         public ActionResult<MiniDTO> CreateMini(CreateMiniDto miniDto)
         {
             DateTime completionDate = miniDto.CompletionDate != null ? miniDto.CompletionDate : DateTime.UtcNow;
+            Game game = repository.GetGame(miniDto.GameId);
             Mini mini = new()
             {
-                mini_name = miniDto.MiniName,
-                sculptor = miniDto.Sculptor,
-                game_id = miniDto.GameId,
-                completion_date = completionDate
+                MiniName = miniDto.MiniName,
+                Sculptor = miniDto.Sculptor,
+                Game = game,
+                CompletionDate = completionDate
             };
 
             repository.CreateMini(mini);
 
-            return CreatedAtAction(nameof(GetMini), new { id = mini.mini_id}, mini.AsDto());
+            return CreatedAtAction(nameof(GetMini), new { id = mini.MiniId}, mini.AsDto());
         }
 
         // PUT /minis/{id}
@@ -73,12 +74,14 @@ namespace MiniBackend.Controllers
                 return NotFound();
             }
 
+            Game game = repository.GetGame(miniDto.GameId);
+
             Mini updatedMini = existingMini with
             {
-                mini_name = miniDto.MiniName,
-                sculptor = miniDto.Sculptor,
-                game_id = miniDto.GameId,
-                completion_date = miniDto.CompletionDate
+                MiniName = miniDto.MiniName,
+                Sculptor = miniDto.Sculptor,
+                Game = game,
+                CompletionDate = miniDto.CompletionDate
             };
 
             repository.UpdateMini(updatedMini);

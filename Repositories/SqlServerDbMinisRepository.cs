@@ -13,7 +13,7 @@ namespace MiniBackend.Repositories
 
         // Minis
         public Mini GetMini(int id) {
-            return context.Minis.Where(mini => mini.mini_id == id).SingleOrDefault();
+            return context.Minis.Where(mini => mini.MiniId == id).SingleOrDefault();
         }
         public IEnumerable<Mini> GetMinis() {
             return context.Minis;
@@ -21,7 +21,7 @@ namespace MiniBackend.Repositories
 
         public IEnumerable<Mini> GetMinisByGame(int gameId)
         {
-            var minis = context.Minis.Where(mini => mini.game_id == gameId);
+            var minis = context.Minis.Where(mini => mini.Game.GameId == gameId);
             return minis;
         }
 
@@ -41,12 +41,12 @@ namespace MiniBackend.Repositories
 
         // Games
         public IEnumerable<Game> GetGames() {
-            return context.Games;
+            return context.Games.Include(g => g.MiniMeta);
         }
 
         public Game GetGame(int id)
         {
-            return context.Games.Where(game => game.game_id == id).SingleOrDefault();
+            return context.Games.Where(game => game.GameId == id).Include(g => g.MiniMeta).SingleOrDefault();
         }
 
         public void CreateGame(Game game)
@@ -57,8 +57,12 @@ namespace MiniBackend.Repositories
 
         public void UpdateGame(Game game)
         {
-            context.Games.Update(game);
-            context.SaveChanges();
+            var result = context.Games.SingleOrDefault(g => g.GameId == game.GameId);
+            if (result != null)
+            {
+                context.Entry(result).CurrentValues.SetValues(game);
+                context.SaveChanges();
+            }
         }
 
         public void DeleteGame(int id)
@@ -66,6 +70,55 @@ namespace MiniBackend.Repositories
             var game = GetGame(id);
             context.Games.Remove(game);
             context.SaveChanges();
-        } 
+        }
+
+        // Photos
+        public IEnumerable<Photo> GetPhotosForMini(int id)
+        {
+            return context.Photos.Where(photo => photo.Mini.MiniId == id);
+        }
+
+        public void CreatePhoto(Photo photo)
+        {
+            context.Photos.Add(photo);
+            context.SaveChanges();
+        }
+
+        public void UpdatePhoto(Photo photo)
+        {
+            var result = context.Photos.SingleOrDefault(p => p.PhotoId == photo.PhotoId);
+            if (result != null)
+            {
+                context.Entry(result).CurrentValues.SetValues(photo);
+                context.SaveChanges();
+            }
+        }
+
+        public void DeletePhoto(int id)
+        {
+            
+            var game = GetGame(id);
+            context.Games.Remove(game);
+            context.SaveChanges();
+        }
+
+        public MiniMeta GetMeta(int id)
+        {
+            return context.MiniMeta.SingleOrDefault(meta => meta.MetaId == id);
+        }
+
+        public int FindMetaIdByValues(string style, string scale)
+        {
+            MiniMeta meta = context.MiniMeta.Where(meta => meta.Scale == scale && meta.Style == style).SingleOrDefault();
+            if(meta is null) {
+                return -1;
+            }
+            return meta.MetaId;
+        }
+
+        public void CreateMeta(MiniMeta meta) {
+            context.MiniMeta.Add(meta);
+            context.SaveChanges();
+        }
     }
 }

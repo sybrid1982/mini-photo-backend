@@ -7,6 +7,7 @@ namespace MiniBackend.DTOs
         [Required]
         public string GameName { get; init; }
         public string BoxArtUrl { get; init; }
-        public int MetaId { get; init; }
+        public string Style { get; init; }
+        public string Scale { get; init; }
     }
 }

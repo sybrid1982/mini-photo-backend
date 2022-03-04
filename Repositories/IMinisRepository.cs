@@ -18,5 +18,12 @@ namespace MiniBackend.Repositories
         void CreateGame(Game game);
         void UpdateGame(Game game);
         void DeleteGame(int id);
+        IEnumerable<Photo> GetPhotosForMini(int id);
+        void CreatePhoto(Photo photo);
+        void UpdatePhoto(Photo photo);
+        void DeletePhoto(int id);
+        MiniMeta GetMeta(int id);
+        int FindMetaIdByValues(string style, string scale);
+        void CreateMeta(MiniMeta meta);
     }
 }

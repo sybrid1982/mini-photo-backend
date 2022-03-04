@@ -7,11 +7,11 @@ namespace MiniBackend
         public static MiniDTO AsDto(this Mini mini)
         {
             return new MiniDTO {
-                Id = mini.mini_id,
-                CompletionDate = mini.completion_date,
-                MiniName = mini.mini_name,
-                Sculptor = mini.sculptor,
-                GameId = mini.game_id
+                Id = mini.MiniId,
+                CompletionDate = mini.CompletionDate,
+                MiniName = mini.MiniName,
+                Sculptor = mini.Sculptor,
+                GameId = mini.Game.GameId
             };
         }
 
@@ -19,11 +19,22 @@ namespace MiniBackend
         {
             return new GameDTO
             {
-                Id = game.game_id,
-                YearPublished = game.year_published,
-                GameName = game.game_name,
-                BoxArtUrl = game.box_art,
-                MetaId = game.meta_id
+                Id = game.GameId,
+                YearPublished = game.YearPublished,
+                GameName = game.GameName,
+                BoxArtUrl = game.BoxArtUrl,
+                Style = game.MiniMeta.Style,
+                Scale = game.MiniMeta.Scale
+            };
+        }
+
+        public static PhotoDTO AsDto(this Photo photo)
+        {
+            return new PhotoDTO
+            {
+                Id = photo.PhotoId,
+                FileName = photo.Filename,
+                MiniId = photo.Mini.MiniId
             };
         }
     }

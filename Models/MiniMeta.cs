@@ -3,8 +3,8 @@ using System.ComponentModel.DataAnnotations;
 namespace MiniBackend.Models {
     public record MiniMeta {
         [Key]
-        public int meta_id { get; init; }
-        public string style { get; init; }
-        public int scale { get; init; }
+        public int MetaId { get; init; }
+        public string Style { get; init; }
+        public string Scale { get; init; }
     }
 }

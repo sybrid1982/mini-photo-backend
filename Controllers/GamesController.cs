@@ -3,6 +3,7 @@ using MiniBackend.Repositories;
 using MiniBackend.Models;
 using MiniBackend.DTOs;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Routing.Constraints;
 
 namespace MiniBackend.Controllers
 {
@@ -42,17 +43,28 @@ namespace MiniBackend.Controllers
         [HttpPost]
         public ActionResult<GameDTO> CreateGame(CreateGameDTO gameDto)
         {
+            int metaId = repository.FindMetaIdByValues(gameDto.Style, gameDto.Scale);
+
+            MiniMeta meta;
+
+            if(metaId >= 0) {
+                meta = repository.GetMeta(metaId);
+            } else {
+                meta = new() {Style = gameDto.Style, Scale = gameDto.Scale };
+                repository.CreateMeta(meta);
+            }
+            
             Game game = new()
             {
-                game_name = gameDto.GameName,
-                year_published = gameDto.YearPublished,
-                box_art = gameDto.BoxArtUrl,
-                meta_id = gameDto.MetaId
+                GameName = gameDto.GameName,
+                YearPublished = gameDto.YearPublished,
+                BoxArtUrl = gameDto.BoxArtUrl,
+                MiniMeta = meta
             };
 
             repository.CreateGame(game);
 
-            return CreatedAtAction(nameof(GetGame), new { id = game.game_id}, game.AsDto());
+            return CreatedAtAction(nameof(GetGame), new { id = game.GameId}, game.AsDto());
         }
 
         // PUT /games/{id}
@@ -64,13 +76,14 @@ namespace MiniBackend.Controllers
             {
                 return NotFound();
             }
+            MiniMeta Meta = repository.GetMeta(gameDto.MetaId);
 
             Game updatedGame = existingGame with
             {
-                game_name = gameDto.GameName,
-                year_published = gameDto.YearPublished,
-                box_art = gameDto.BoxArtUrl,
-                meta_id = gameDto.MetaId
+                GameName = gameDto.GameName,
+                YearPublished = gameDto.YearPublished,
+                BoxArtUrl = gameDto.BoxArtUrl,
+                MiniMeta = Meta
             };
 
             repository.UpdateGame(updatedGame);
@@ -90,6 +103,33 @@ namespace MiniBackend.Controllers
             repository.DeleteGame(id);
 
             return NoContent();
+        }
+
+        // POST /games/photo
+        [HttpPost("photo")]
+        public async Task<IActionResult> OnPostUploadAsync(IFormFile file)
+        {
+            // if(file.Count == 0)
+            // {
+            //     return BadRequest();
+            // }
+            IFormFile theFile = file;
+            string extension = Path.GetExtension(file.FileName);
+            long size = theFile.Length;
+
+            if(theFile.Length > 0) {
+                var filePath = Path.Combine("/Users/sybri/vue-projects/mini-photos-app/MiniBackend/Images/BoxArt",
+                    Path.GetRandomFileName());
+
+                filePath += extension;
+
+                using (var stream = System.IO.File.Create(filePath))
+                {
+                    await theFile.CopyToAsync(stream);
+                }
+                return Ok( new { fileName = filePath});
+            }
+            return BadRequest();
         }
     }
 }

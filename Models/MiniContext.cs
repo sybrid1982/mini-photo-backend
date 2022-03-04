@@ -13,5 +13,7 @@ namespace MiniBackend.Models
         public DbSet<Mini> Minis { get; set; } = null!;
         public DbSet<Game> Games { get; set; } = null!;
         public DbSet<MiniMeta> MiniMeta { get; set; } = null!;
+        public DbSet<Photo> Photos { get; set; } = null!;
+        public DbSet<Paint> Paints { get; set; } = null!;
     }
 }
