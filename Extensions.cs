@@ -6,13 +6,25 @@ namespace MiniBackend
     public static class Extension {
         public static MiniDTO AsDto(this Mini mini)
         {
-            return new MiniDTO {
-                Id = mini.MiniId,
-                CompletionDate = mini.CompletionDate,
-                MiniName = mini.MiniName,
-                Sculptor = mini.Sculptor,
-                GameId = mini.Game.GameId
-            };
+            try {
+                return new MiniDTO {
+                    Id = mini.MiniId,
+                    CompletionDate = mini.CompletionDate,
+                    MiniName = mini.MiniName,
+                    Sculptor = mini.Sculptor,
+                    GameId = mini.Game.GameId
+                };
+            } catch (Exception ex)
+            {
+                throw ex;
+                return new MiniDTO {
+                    Id = mini.MiniId,
+                    CompletionDate = mini.CompletionDate,
+                    MiniName = mini.MiniName,
+                    Sculptor = mini.Sculptor,
+                    GameId = -1
+                };
+            }
         }
 
         public static GameDTO AsDto(this Game game)

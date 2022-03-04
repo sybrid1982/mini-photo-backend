@@ -105,14 +105,8 @@ namespace MiniBackend.Controllers
 
         // POST /minis/photo/id
         [HttpPost("photo/{id}")]
-        public async Task<IActionResult> OnPostUploadAsync(int id, List<IFormFile> files)
+        public async Task<IActionResult> OnPostUploadAsync(int id, IFormFile file)
         {
-            if(files.Count == 0)
-            {
-                return BadRequest();
-            }
-            
-            foreach(var file in files) {
                 string extension = Path.GetExtension(file.FileName);
                 long size = file.Length;
 
@@ -139,9 +133,9 @@ namespace MiniBackend.Controllers
 
                     repository.CreatePhoto(photo);
                     // return Ok( new { fileName = filePath});
-                }
+
             }
-            return Ok(new { count = files.Count });
+            return Ok();
         }
     }
 }
