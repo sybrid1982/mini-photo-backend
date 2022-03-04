@@ -102,5 +102,46 @@ namespace MiniBackend.Controllers
 
             return NoContent();
         }
+
+        // POST /minis/photo/id
+        [HttpPost("photo/{id}")]
+        public async Task<IActionResult> OnPostUploadAsync(int id, List<IFormFile> files)
+        {
+            if(files.Count == 0)
+            {
+                return BadRequest();
+            }
+            
+            foreach(var file in files) {
+                string extension = Path.GetExtension(file.FileName);
+                long size = file.Length;
+
+                if(file.Length > 0) {
+                    var filePath = Path.Combine("/Users/sybri/vue-projects/mini-photos-app/MiniBackend/Images/MiniPictures",
+                        Path.GetRandomFileName());
+
+                    filePath += extension;
+
+                    Mini mini = repository.GetMini(id);
+
+                    using (var stream = System.IO.File.Create(filePath))
+                    {
+                        await file.CopyToAsync(stream);
+                    }
+
+                    string filenameForDb = filePath.Split("Images")[1];
+
+                    Photo photo = new()
+                    {
+                        Mini = mini,
+                        Filename = filenameForDb
+                    };
+
+                    repository.CreatePhoto(photo);
+                    // return Ok( new { fileName = filePath});
+                }
+            }
+            return Ok(new { count = files.Count });
+        }
     }
 }

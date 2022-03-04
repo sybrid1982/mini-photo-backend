@@ -37,21 +37,6 @@ namespace MiniBackend.Controllers
 
         // TODO: create function for getting the first photo for a mini
 
-        [HttpPost]
-        public ActionResult<PhotoDTO> CreatePhoto(CreatePhotoDTO photoDto)
-        {
-            Mini mini = repository.GetMini(photoDto.MiniId);
-            Photo photo = new()
-            {
-                Filename = photoDto.FileName,
-                Mini = mini
-            };
-
-            repository.CreatePhoto(photo);
-
-            return CreatedAtAction(nameof(GetPhoto), new { id = photo.PhotoId}, photo.AsDto());
-        }
-
         // TODO: PUT
         // TODO: DELETE
     }
