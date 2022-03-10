@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Runtime.CompilerServices;
 
 namespace MiniBackend.Models {
@@ -6,6 +7,7 @@ namespace MiniBackend.Models {
         public Mini ()
         {
             this.Paints = new HashSet<Paint>();
+            this.Photos = new HashSet<Photo>();
         }
         [Key]
         public int MiniId { get; init; }
@@ -15,8 +17,8 @@ namespace MiniBackend.Models {
         public string Sculptor { get; init; }
         [Required]
         public Game Game { get; init; }
+        [InverseProperty("Mini")]
         public ICollection<Photo> Photos { get; init; }
-        public Photo PreferredPhoto { get; init; }
         public virtual ICollection<Paint> Paints { get; init; }
     }
 

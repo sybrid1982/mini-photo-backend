@@ -9,5 +9,6 @@ namespace MiniBackend.DTOs
         public string MiniName { get; init; }
         public string Sculptor { get; init; }
         public int GameId { get; init; }
+        public string[] FileNames { get; init; }
     }
 }

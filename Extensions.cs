@@ -7,12 +7,14 @@ namespace MiniBackend
         public static MiniDTO AsDto(this Mini mini)
         {
             try {
+                var filenames = mini.Photos.Select(photo => photo.Filename);
                 return new MiniDTO {
                     Id = mini.MiniId,
                     CompletionDate = mini.CompletionDate,
                     MiniName = mini.MiniName,
                     Sculptor = mini.Sculptor,
-                    GameId = mini.Game.GameId
+                    GameId = mini.Game.GameId,
+                    FileNames = filenames.ToArray()
                 };
             } catch (Exception ex)
             {
