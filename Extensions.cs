@@ -17,13 +17,6 @@ namespace MiniBackend
             } catch (Exception ex)
             {
                 throw ex;
-                return new MiniDTO {
-                    Id = mini.MiniId,
-                    CompletionDate = mini.CompletionDate,
-                    MiniName = mini.MiniName,
-                    Sculptor = mini.Sculptor,
-                    GameId = -1
-                };
             }
         }
 

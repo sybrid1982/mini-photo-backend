@@ -16,6 +16,7 @@ namespace MiniBackend.Models {
         [Required]
         public Game Game { get; init; }
         public ICollection<Photo> Photos { get; init; }
+        public Photo PreferredPhoto { get; init; }
         public virtual ICollection<Paint> Paints { get; init; }
     }
 

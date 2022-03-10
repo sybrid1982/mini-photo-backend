@@ -16,10 +16,12 @@ namespace MiniBackend.Controllers
             this.repository = repository;
         }
 
+        // TODO: #5 #2 #3 Set up the GET mini calls to return at least one image url
         [HttpGet]
         public IEnumerable<MiniDTO> GetMinis()
         {
             var minis = repository.GetMinis().Select( mini => mini.AsDto());
+            // If we are fetching all minis, then we only need one photo for each
             return minis;
         }
 
@@ -33,6 +35,7 @@ namespace MiniBackend.Controllers
                 return NotFound();
             }
 
+            // In this case, return all images as we are only fetching for one mini
             return mini.AsDto();
         }
 
@@ -42,6 +45,7 @@ namespace MiniBackend.Controllers
         public IEnumerable<MiniDTO> GetMinisByGame(int id)
         {
             var minis = repository.GetMinisByGame(id).Select(mini => mini.AsDto());
+            // In this case, return only first image (later, preferred or first)
             return minis;
         }
 

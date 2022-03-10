@@ -35,7 +35,7 @@ namespace MiniBackend.Controllers
             return photos;
         }
 
-        // TODO: create function for getting the first photo for a mini
+        // TODO: #1 create function for getting the prefered or first photo for a mini
 
         // TODO: PUT
         // TODO: DELETE
