@@ -13,15 +13,18 @@ namespace MiniBackend.Repositories
 
         // Minis
         public Mini GetMini(int id) {
-            return context.Minis.Where(mini => mini.MiniId == id).Include(m => m.Game).SingleOrDefault();
+            return context.Minis.Where(mini => mini.MiniId == id)
+                .Include(m => m.Game)
+                .Include(m => m.Photos)
+                .SingleOrDefault();
         }
         public IEnumerable<Mini> GetMinis() {
-            return context.Minis.Include(m => m.Game);
+            return context.Minis.Include(m => m.Game).Include(m => m.Photos);
         }
 
         public IEnumerable<Mini> GetMinisByGame(int gameId)
         {
-            var minis = context.Minis.Where(mini => mini.Game.GameId == gameId).Include(m => m.Game);
+            var minis = context.Minis.Where(mini => mini.Game.GameId == gameId).Include(m => m.Game).Include(m => m.Photos);
             return minis;
         }
 
