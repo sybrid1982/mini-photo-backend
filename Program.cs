@@ -2,7 +2,6 @@ using MiniBackend.Repositories;
 using MiniBackend.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.FileProviders;
-using Microsoft.AspNetCore.Builder;
 
 var  MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
 
@@ -32,8 +31,6 @@ builder.Services.AddDbContext<MiniContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("BackendMinisContext")));
 builder.Services.AddScoped<IMinisRepository, SqlServerDbMinisRepository>();
 
-// Add front end
-// builder.Services.AddSpaStaticFiles(configuration => configuration.RootPath = "wwwroot/dist");
 
 var app = builder.Build();
 
@@ -55,24 +52,20 @@ app.UseHttpsRedirection();
 
 app.UseDefaultFiles();
 
-// app.UseSpaStaticFiles();
-app.UseStaticFiles(new StaticFileOptions
-{
-    FileProvider = new PhysicalFileProvider(
-           Path.Combine(builder.Environment.ContentRootPath, "Images")),
-    RequestPath = "/Images"
-});
+if (app.Environment.IsDevelopment()) {
+    app.UseStaticFiles(new StaticFileOptions
+    {
+        FileProvider = new PhysicalFileProvider(
+            Path.Combine(builder.Environment.ContentRootPath, "Images")),
+        RequestPath = "/Images"
+    });
+} else {
+    // app.UseStaticFiles();
+}
+app.UseStaticFiles();
 
 app.UseAuthorization();
 
 app.MapControllers();
-
-// app.UseSpa(configuration: builder =>
-//     {
-//         if (app.Environment.IsDevelopment())
-//         {
-//             builder.UseProxyToSpaDevelopmentServer("http://localhost:8080");
-//         }
-//     });
 
 app.Run();
